@@ -1,5 +1,6 @@
 
 
+
 const readline = require('readline');
 //Importación del modelo.
 const model = require('./model');
