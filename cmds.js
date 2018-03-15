@@ -205,7 +205,7 @@ exports.editCmd = (rl,id)  => {
 
 
 //Prueba un quiz, es decir, hace una pregunta del modelo a la que debemos contestar.
-*exports.testCmd = (rl,id)  => {
+/*exports.testCmd = (rl,id)  => {
   if(typeof id === "undefined") {
       errorlog(`Falta el parámetro id.`);
       rl.prompt();
@@ -236,7 +236,7 @@ exports.editCmd = (rl,id)  => {
 */
 //Pregunta todos los quizzes existentes en el modelo en orden aleatorio.
 //Se gana si se contesta a todos satisfactoriamente.
-*exports.playCmd = rl => {
+/*exports.playCmd = rl => {
 
   let score = 0; //Variable que lleva un registro de la puntuación del test.
   let toBeResolved = [];
