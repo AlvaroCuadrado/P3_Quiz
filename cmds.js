@@ -253,49 +253,25 @@ exports.testCmd = (rl,id) => {
 };
 
 
-//Prueba un quiz, es decir, hace una pregunta del modelo a la que debemos contestar.
-/*exports.testCmd = (rl,id)  => {
-  if(typeof id === "undefined") {
-      errorlog(`Falta el parámetro id.`);
-      rl.prompt();
-    } else {
-        try{
-            const quiz = model.getByIndex(id);
-            rl.question(colorize(` ${quiz.question}${"? "}`, 'red'), respuestaUsuario => {
-              if ((respuestaUsuario.toLowerCase().trim()) === quiz.answer.toLowerCase()) {
-                console.log("Su respuesta es correcta.");
-                biglog("Correcta","green");
-                }
-                else {
-                  console.log("Su respuesta es incorrecta.");
-                  biglog("Incorrecta","red");
-                }
-
-                rl.prompt();
-
-              });
-
-
-          } catch(error){
-                  errorlog(error.message);
-                  rl.prompt();
-              };
-            };
-          };
-*/
 //Pregunta todos los quizzes existentes en el modelo en orden aleatorio.
 //Se gana si se contesta a todos satisfactoriamente.
-/*exports.playCmd = rl => {
+exports.playCmd = rl => {
 
-  let score = 0; //Variable que lleva un registro de la puntuación del test.
-  let toBeResolved = [];
-  let numeroPreguntas = model.count();
+  let score = 0; //Variable que lleva un registro de la puntuación del quiz.
+  let toBeResolved = []; //Variable array que guarda el numero de preguntas por hacer.
+  //let numeroPreguntas = models.count();
 
-  for(var i = 0; i< numeroPreguntas; i++){
-      toBeResolved.push(i);
-    }
+  models.quiz.findAll()
+   .each(quiz => {
+     //for(var i = 1; i< quizzes.length; i++){
+         toBeResolved.push(quiz);
+     })
 
-    const playOne = () => {
+     .then(() => {
+
+
+
+  const playOne = () => {
 
           if(toBeResolved.length === 0) {
 
@@ -308,41 +284,55 @@ exports.testCmd = (rl,id) => {
                 let a = Math.random();
                 let b = toBeResolved.length-1;
                 let c= a*b;
-                let randomId = Math.round(c);
+                let randomId = Math.round(c); //variable con el id de la pregunta a realizar (aleatorio)
+                let quiz = toBeResolved[randomId];
+                toBeResolved.splice(randomId,1); //elimino del array el id de la pregunta que voy a realizar para no repetirla.
 
-                  const quiz = model.getByIndex(toBeResolved[randomId]);
-
-                  toBeResolved.splice(randomId,1);
-
-
-
-                  rl.question(colorize(` ${quiz.question} ${"? "}`, 'red'), respuestaUsuario => {
-                    if ((respuestaUsuario.toLowerCase().trim()) === quiz.answer.toLowerCase()) {
-
-                      score ++;
-                      console.log(`${"CORRECTO. Lleva"} ${score} ${"aciertos."}`);
-                      playOne();
-
-                    }
+                  //.then(id => models.quiz.findById(randomId))
+                  //.then(quiz => {
 
 
-                      else {
-                      console.log("INCORRECTO.");
-                      console.log(`Fin del juego. Aciertos: ${score}`);
-                      biglog(score, "magenta");
+                  return makeQuestion(rl, ` ${quiz.question}${"? "}`)
+                    .then(a => {
 
+                      if ((a.toLowerCase().trim()) === quiz.answer.toLowerCase()) {
+                        score ++;
+                        console.log(`${"CORRECTO. Lleva"} ${score} ${"aciertos."}`);
+                        playOne();
                       }
-
+                      else{
+                        console.log("INCORRECTO.");
+                        console.log(`Fin del juego. Aciertos: ${score}`);
+                        biglog(score, "magenta");
+                      }
                       rl.prompt();
-                });
-            };
+
+                    })
+
+
+                    .catch(Sequelize.ValidationError, error => {
+                      errorlog('El quiz es erroneo: ');
+                      error.errors.forEach(({message}) => errorlog(message));
+                    })
+
+                    .catch(error => {
+                      errorlog(error.message);
+                    })
+
+                    .then(() => {
+                      rl.prompt();
+                    });
+
+            }
 
        };
 
        playOne();
+
+     })
+
 };
 
-*/
 //Muestra los nombres de los autores de la práctica.
 exports.creditsCmd = rl => {
 

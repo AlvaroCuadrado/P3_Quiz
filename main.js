@@ -77,12 +77,12 @@ let cmd = args[0].toLowerCase().trim();
 
       break;
 
-    //case 'play':
-    //case 'p':
+    case 'play':
+    case 'p':
 
-      //cmds.playCmd(rl);
+      cmds.playCmd(rl);
 
-      //break;
+      break;
 
     case 'delete':
 
