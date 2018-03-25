@@ -210,6 +210,48 @@ exports.editCmd = (rl,id)  => {
 
   };
 
+/*Prueba un quiz, es decir, hace una pregunta del modelo a la que debemos contestar.
+*@param  rl  objeto readline usado para implementar el CLI.
+*@param  id  clave del quiz que se va a preguntar del modelo.
+*/
+
+exports.testCmd = (rl,id) => {
+  validateId(id)
+  .then(id => models.quiz.findById(id))
+  .then(quiz => {
+    if(!quiz){
+        throw new Error(`No existe un quiz asociado al id =${id}. `);
+    }
+
+      return makeQuestion(rl,` ${quiz.question}${"? "}`)
+      .then(a => {
+
+          if(a.toLowerCase().trim() === quiz.answer.toLowerCase().trim()){
+          log('Su respuesta es correcta.');
+          biglog("CORRECTA","green");
+          }
+          else{
+          log('Su respuesta es incorrecta.');
+          biglog("INCORRECTA","RED");
+          }
+      });
+    })
+
+    .catch(Sequelize.ValidationError, error => {
+      errorlog('El quiz es erroneo: ');
+      error.errors.forEach(({message}) => errorlog(message));
+    })
+
+    .catch(error => {
+      errorlog(error.message);
+    })
+
+    .then(() => {
+      rl.prompt();
+    });
+
+};
+
 
 //Prueba un quiz, es decir, hace una pregunta del modelo a la que debemos contestar.
 /*exports.testCmd = (rl,id)  => {

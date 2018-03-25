@@ -71,11 +71,11 @@ let cmd = args[0].toLowerCase().trim();
 
       break;
 
-    //case 'test':
+    case 'test':
 
-      //cmds.testCmd(rl,args[1]);
+      cmds.testCmd(rl,args[1]);
 
-      //break;
+      break;
 
     //case 'play':
     //case 'p':
