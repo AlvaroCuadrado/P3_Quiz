@@ -262,13 +262,13 @@ exports.playCmd = rl => {
   //let numeroPreguntas = models.count();
 
   models.quiz.findAll()
-   .each(quiz => {
-     //for(var i = 1; i< quizzes.length; i++){
-         toBeResolved.push(quiz);
-     })
+    //.then(quiz =>
+    .each(quiz => {
+      toBeResolved.push(quiz);
+    })
+
 
      .then(() => {
-
 
 
   const playOne = () => {
@@ -309,7 +309,7 @@ exports.playCmd = rl => {
 
                     })
 
-
+                    //manejo de excepciones diversas:
                     .catch(Sequelize.ValidationError, error => {
                       errorlog('El quiz es erroneo: ');
                       error.errors.forEach(({message}) => errorlog(message));
@@ -327,7 +327,7 @@ exports.playCmd = rl => {
 
        };
 
-       playOne();
+       playOne(); //llamada a la función PlayOne recursiva.
 
      })
 
